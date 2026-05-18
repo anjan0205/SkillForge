@@ -60,6 +60,21 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Cloudinary — File Upload Service (images, videos, documents) -->
+        <!-- API Key: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET env vars -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+        </dependency>
+
+        <!-- Spring Mail — Email Service (compatible with Resend SMTP and SendGrid SMTP) -->
+        <!-- API Key: RESEND_API_KEY or SENDGRID_API_KEY env vars -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

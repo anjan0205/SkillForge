@@ -69,6 +69,9 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/courses", "/api/courses/**").permitAll()
+                        // File upload endpoints — require JWT; role checks are done via @PreAuthorize
+                        // in FileUploadController (video upload restricted to INSTRUCTOR/ADMIN)
+                        .requestMatchers("/api/upload/**").authenticated()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 );

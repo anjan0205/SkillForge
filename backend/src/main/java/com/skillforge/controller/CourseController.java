@@ -1,13 +1,17 @@
 package com.skillforge.controller;
 
 import com.skillforge.model.Course;
+import com.skillforge.model.User;
+import com.skillforge.repository.UserRepository;
 import com.skillforge.service.CourseService;
+import com.skillforge.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -16,6 +20,14 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // Sends enrollment confirmation email asynchronously.
+    // Configure email in application.properties to enable real delivery.
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     public List<Course> getAllCourses() {
@@ -68,7 +80,19 @@ public class CourseController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<Course> enrollStudent(@PathVariable String id, @PathVariable String studentId) {
         try {
-            return ResponseEntity.ok(courseService.enrollStudent(id, studentId));
+            Course enrolled = courseService.enrollStudent(id, studentId);
+
+            // Send enrollment confirmation email asynchronously (non-blocking).
+            // If EMAIL_ENABLED=false, this is a no-op logged to the console.
+            Optional<User> student = userRepository.findById(studentId);
+            student.ifPresent(s -> emailService.sendEnrollmentEmail(
+                    s.getEmail(),
+                    s.getFirstName(),
+                    enrolled.getTitle(),
+                    enrolled.getId()
+            ));
+
+            return ResponseEntity.ok(enrolled);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

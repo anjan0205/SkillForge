@@ -9,6 +9,7 @@ import com.skillforge.model.User;
 import com.skillforge.repository.UserRepository;
 import com.skillforge.security.JwtUtils;
 import com.skillforge.security.UserDetailsImpl;
+import com.skillforge.service.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,11 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    // Email is sent asynchronously after registration/enrollment.
+    // Configure email provider in application.properties to enable real delivery.
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -85,6 +91,10 @@ public class AuthController {
                 .build();
 
         userRepository.save(user);
+
+        // Send welcome email asynchronously (non-blocking).
+        // If EMAIL_ENABLED=false or SMTP is not configured, this is a no-op (logged only).
+        emailService.sendWelcomeEmail(user.getEmail(), user.getFirstName());
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
