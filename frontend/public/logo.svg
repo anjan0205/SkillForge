@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 65" width="100%" height="100%">
+  <!-- Elegant golden four-pointed star crowning the letter S -->
+  <path d="M 24 6 Q 24 16 14 16 Q 24 16 24 26 Q 24 16 34 16 Q 24 16 24 6 Z" fill="#C5A874" />
+  
+  <!-- SkillForge Typography -->
+  <text x="12" y="48" font-family="'Public Sans', 'Inter', sans-serif" font-weight="800" font-size="34" fill="currentColor" letter-spacing="-0.5">
+    SkillForge
+  </text>
+</svg>
